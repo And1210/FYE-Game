@@ -16,6 +16,8 @@ var spawnTimer = 0;
 var bullets = [];
 var frameCount = 0;
 
+var weapon;
+
 function preload() {
   mapRawData = loadStrings("maps/map0.txt");
 }
@@ -31,7 +33,8 @@ function setup() {
   setupBlocks();
   player = new Player(200, 200);
 
-  bg.resize(width, height);
+  weapon = new Weapon(0);
+  weapon.init();
 }
 
 function draw() {
