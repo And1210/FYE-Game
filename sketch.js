@@ -1,4 +1,5 @@
-var pSprite;
+var bg;
+var pSprites = [];
 var mapRawData;
 var mapData = [];
 var mapBlocks = [];
@@ -17,22 +18,28 @@ var frameCount = 0;
 
 function preload() {
   mapRawData = loadStrings("maps/map0.txt");
-
-  //pSprite = loadImage("insert path here");
 }
 
 function setup() {
   createCanvas(750, 750);
+
+  bg = loadImage("res/background.jpg");
 
   initKeys();
   parseMap();
   blockWidth = width / mapData.length;
   setupBlocks();
   player = new Player(200, 200);
+
+  bg.resize(width, height);
 }
 
 function draw() {
+  checkBgSize();
+
   background(255);
+  //tint(255, 127);
+  image(bg, 0, 0);
 
   renderMap();
   player.update();
@@ -144,5 +151,11 @@ function keyReleased() {
       break;
     default:
       break;
+  }
+}
+
+function checkBgSize() {
+  if (bg.width != width) {
+    bg.resize(width, height);
   }
 }

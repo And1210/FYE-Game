@@ -99,7 +99,7 @@ Player.prototype.shoot = function() {
     this.shootTimer = frameCount;
     // bullets.push(new Bullet(this.pos.x, this.pos.y, this.dir));
     bullets.push(new Bullet(this.pos.x + blockWidth * (this.dir / 2.0 + 0.5),
-      this.pos.y + blockWidth, this.dir));
+      this.pos.y + blockWidth, this.dir, 5));
   }
 }
 

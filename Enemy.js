@@ -4,7 +4,8 @@ function Enemy(x, y) {
   this.acc = createVector(0, 0);
   this.gridPos = createVector(floor(x / blockWidth), floor(y / blockWidth));
   this.sprite; //need to load image
-  this.speed = 2;
+  this.health = 10;
+  this.speed = 3;
   this.inContact = [false, false, false, false]; //left, right, top, bottom
 
   this.dir;
@@ -30,7 +31,7 @@ Enemy.prototype.render = function() {
 
 Enemy.prototype.gravity = function() {
   if (!this.inContact[3]) {
-    this.applyForce(0, 1);
+    this.applyForce(0, this.speed / 2);
   }
 }
 
@@ -115,7 +116,11 @@ Enemy.prototype.collision = function(pos, w, h) {
 }
 
 Enemy.prototype.dead = function() {
-  return this.outBounds();
+  return this.outBounds() || (this.health <= 0);
+}
+
+Enemy.prototype.damage = function(dmg) {
+  this.health -= dmg;
 }
 
 Enemy.prototype.outBounds = function() {
