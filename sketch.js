@@ -1,6 +1,9 @@
 var bg;
 var pSprites = [];
 var mapRawData;
+var weaponProperties = [];
+var weaponSprites = [];
+var weaponNum = 1;
 var mapData = [];
 var mapBlocks = [];
 var blockWidth = 25;
@@ -16,10 +19,13 @@ var spawnTimer = 0;
 var bullets = [];
 var frameCount = 0;
 
-var weapon;
-
 function preload() {
   mapRawData = loadStrings("maps/map0.txt");
+
+  for (var i = 0; i < weaponNum; i++) {
+    weaponProperties.push(loadStrings("weapons/weapon" + i + ".txt"));
+    weaponSprites.push(loadImage("res/weapon" + i + ".png"));
+  }
 }
 
 function setup() {
@@ -32,9 +38,6 @@ function setup() {
   blockWidth = width / mapData.length;
   setupBlocks();
   player = new Player(200, 200);
-
-  weapon = new Weapon(0);
-  weapon.init();
 }
 
 function draw() {

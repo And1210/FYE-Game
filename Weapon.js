@@ -8,14 +8,15 @@ function Weapon(type) {
   this.fireRate; //frames/bullet
   this.width;
   this.height;
+
+  this.init();
 }
 
 Weapon.prototype.init = function() {
-  this.properties = loadStrings("weapons/weapon" + this.type + ".txt");
+  this.properties = weaponProperties[this.type];
 
   for (var i = 0; i < this.properties.length; i++) {
     var t = split(this.properties[i], ": ");
-    console.log(t);
 
     switch (t[0]) {
       case "name":
@@ -25,16 +26,16 @@ Weapon.prototype.init = function() {
         this.position = t[1];
         break;
       case "damage":
-        this.damage = t[1];
+        this.damage = parseInt(t[1]);
         break;
       case "fireRate":
-        this.fireRate = t[1];
+        this.fireRate = parseInt(t[1]);
         break;
       case "width":
-        this.width = t[1];
+        this.width = parseInt(t[1]);
         break;
       case "height":
-        this.height = t[1];
+        this.height = parseInt(t[1]);
         break;
       default:
         break;

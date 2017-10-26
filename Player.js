@@ -3,17 +3,21 @@ function Player(x, y) {
   this.vel = createVector(0, 0);
   this.acc = createVector(0, 0);
   this.gridPos = createVector(floor(x / blockWidth), floor(y / blockWidth));
-  this.sprite; //need to load image
   this.speed = 17;
-  this.dir = 0;
+  this.dir = 1;
   this.dead = false;
   this.inContact = [false, false, false, false]; //left, right, top, bottom
   this.shootTimer = 0;
   this.shootRate = 35;
+
+  this.type = 0;
+  this.weapon = new Weapon(this.type);
+  this.sprite = weaponSprites[this.type];
+  this.sprite.resize(this.weapon.width, this.weapon.height);
 }
 
 Player.prototype.update = function() {
-  //this.checkEnemyCollision();
+  // this.checkEnemyCollision();
   this.checkContact();
   this.checkInput();
   this.kinematics();
@@ -24,8 +28,17 @@ Player.prototype.update = function() {
 Player.prototype.render = function() {
   noStroke();
   fill(0);
-  if (!this.dead)
-    rect(this.pos.x, this.pos.y, blockWidth, blockWidth * 2);
+  if (!this.dead) {
+    // rect(this.pos.x, this.pos.y, blockWidth, blockWidth * 2);
+    push();
+    imageMode(CENTER);
+    translate(this.pos.x + this.sprite.width / 2, this.pos.y + this.sprite.height /
+      2);
+    scale(this.dir, 1);
+    image(this.sprite, 0, 0);
+    imageMode(CORNER);
+    pop();
+  }
 }
 
 Player.prototype.gravity = function() {
@@ -99,7 +112,7 @@ Player.prototype.shoot = function() {
     this.shootTimer = frameCount;
     // bullets.push(new Bullet(this.pos.x, this.pos.y, this.dir));
     bullets.push(new Bullet(this.pos.x + blockWidth * (this.dir / 2.0 + 0.5),
-      this.pos.y + blockWidth, this.dir, 5));
+      this.pos.y + blockWidth, this.dir, this.weapon.damage));
   }
 }
 
@@ -130,4 +143,9 @@ Player.prototype.checkInput = function() {
   if (s == 1) {
     //this.applyForce(0, this.speed);
   }
+}
+
+Player.prototype.switchWeapon = function(type) {
+  this.type = type;
+  this.weapon = new Weapon(this.type);
 }
