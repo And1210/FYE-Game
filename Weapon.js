@@ -8,6 +8,9 @@ function Weapon(type) {
   this.fireRate; //frames/bullet
   this.width;
   this.height;
+  this.num_bullets;
+  this.img_bullet;
+  this.speed;
 
   this.init();
 }
@@ -36,6 +39,15 @@ Weapon.prototype.init = function() {
         break;
       case "height":
         this.height = parseInt(t[1]);
+        break;
+      case "num_bullets":
+        this.num_bullets = parseInt(t[1]);
+        break;
+      case "img":
+        this.img_bullet = t[1];
+        break;
+      case "speed":
+        this.speed = parseInt(t[1]);
         break;
       default:
         break;

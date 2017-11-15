@@ -1,10 +1,10 @@
-function Bullet(x, y, dir, dmg) {
+function Bullet(x, y, dir, dmg, vX, vY, type) {
   this.pos = createVector(x, y);
   this.speed = 20;
-  this.vel = createVector(this.speed * dir, 0);
+  this.vel = createVector(this.speed * dir * vX, vY);
   this.toDelete = false;
   this.dmg = dmg;
-  this.width = blockWidth;
+  this.width = blockWidth / 2;
   this.height = blockWidth / 2;
 }
 
@@ -17,8 +17,9 @@ Bullet.prototype.update = function() {
 
 Bullet.prototype.render = function() {
   noStroke();
-  fill(0, 255, 120);
-  rect(this.pos.x, this.pos.y, this.width, this.height);
+  fill(0, 0, 255);
+  //rect(this.pos.x, this.pos.y, this.width, this.height);
+  ellipse(this.pos.x + this.width/2, this.pos.y + this.height/2, this.width, this.height);
 }
 
 Bullet.prototype.checkBounds = function() {

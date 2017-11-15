@@ -1,0 +1,9 @@
+name: Liam and Laurel
+position: Athletic Rep
+damage: 5
+fireRate: 10
+width: 40
+height: 36
+num_bullets: 1
+img: dodgeball
+speed: 1

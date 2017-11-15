@@ -1,0 +1,9 @@
+name: Andrew F.
+position: AMS Rep
+damage: 0
+fireRate: 0
+width: 25
+height: 36
+num_bullets: 0
+img: bullet
+speed: 1

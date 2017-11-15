@@ -1,0 +1,9 @@
+name: Mitch and Monique
+position: Events
+damage: 10
+fireRate: 10
+width: 40
+height: 36
+num_bullets: 1
+img: bullet
+speed: 1

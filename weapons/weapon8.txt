@@ -1,0 +1,9 @@
+name: Alex and Graeme
+position: Sci Formal Rep
+damage: 4
+fireRate: 15
+width: 40
+height: 36
+num_bullets: 5
+img: bullet
+speed: 1

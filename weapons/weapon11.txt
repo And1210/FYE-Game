@@ -1,0 +1,9 @@
+name: Chas, Christina, and Claire
+position: Section Reps
+damage: 3
+fireRate: 3
+width: 50
+height: 36
+num_bullets: 10
+img: bullet
+speed: 1

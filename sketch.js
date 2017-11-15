@@ -1,11 +1,14 @@
 var bg;
+var bgMusic = [];
 var pSprites = [];
 var mapRawData;
 var weaponProperties = [];
 var weaponSprites = [];
-var weaponNum = 1;
+var weaponNum = 12;
 var mapData = [];
 var mapBlocks = [];
+var surfaceBlocks = [];
+var blockImg;
 var blockWidth = 25;
 var a = 0,
   d = 0,
@@ -19,13 +22,17 @@ var spawnTimer = 0;
 var bullets = [];
 var frameCount = 0;
 
+var crate;
+
 function preload() {
   mapRawData = loadStrings("maps/map0.txt");
 
   for (var i = 0; i < weaponNum; i++) {
     weaponProperties.push(loadStrings("weapons/weapon" + i + ".txt"));
-    weaponSprites.push(loadImage("res/weapon" + i + ".png"));
+    weaponSprites.push(loadImage("res/weapons/weapon" + i + ".png"));
   }
+
+  blockImg = loadImage("res/block.png");
 }
 
 function setup() {
@@ -37,7 +44,10 @@ function setup() {
   parseMap();
   blockWidth = width / mapData.length;
   setupBlocks();
+  initSurfaceBlocks();
   player = new Player(200, 200);
+
+  crate = new Crate();
 }
 
 function draw() {
@@ -48,8 +58,11 @@ function draw() {
   image(bg, 0, 0);
 
   renderMap();
-  player.update();
-  player.render();
+  if (!player.dead) {
+    player.update();
+    player.render();
+  }
+  crate.render();
 
   for (var i = enemies.length - 1; i >= 0; i--) {
     if (enemies[i].dead()) {
@@ -100,7 +113,7 @@ function setupBlocks() {
     var a = [];
     for (var j = 0; j < mapData[i].length; j++) {
       var b = new Block(j * blockWidth, i * blockWidth, blockWidth, blockWidth,
-        mapData[i][j]);
+        parseInt(mapData[i][j]));
       if (mapData[i][j] == 2) {
         b.setColour(71, 60, 139);
       } else if (mapData[i][j] == 0) {
@@ -110,6 +123,16 @@ function setupBlocks() {
       a.push(b);
     }
     mapBlocks.push(a);
+  }
+}
+
+function initSurfaceBlocks() {
+  for (var i = 0; i < (width / blockWidth); i++) {
+    for (var j = 8; j < (height / blockWidth); j++) {
+      if (mapBlocks[j][i].type != 0 && mapBlocks[j-1][i].type == 0) {
+        surfaceBlocks.push(mapBlocks[j][i]);
+      }
+    }
   }
 }
 
