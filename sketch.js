@@ -4,6 +4,7 @@ var pSprites = [];
 var mapRawData;
 var weaponProperties = [];
 var weaponSprites = [];
+var bulletSprites = [];
 var weaponNum = 12;
 var mapData = [];
 var mapBlocks = [];
@@ -32,13 +33,23 @@ function preload() {
     weaponSprites.push(loadImage("res/weapons/weapon" + i + ".png"));
   }
 
+  bulletSprites.push(loadImage("res/bullets/bullet.png"));
+  bulletSprites.push(loadImage("res/bullets/bed.png"));
+  bulletSprites.push(loadImage("res/bullets/money.png"));
+  bulletSprites.push(loadImage("res/bullets/dodgeball.png"));
+  bulletSprites.push(loadImage("res/bullets/chrome.png"));
+  bulletSprites.push(loadImage("res/bullets/instagram.png"));
+
   blockImg = loadImage("res/block.png");
+  bg = loadImage("res/background.jpg");
 }
 
 function setup() {
   createCanvas(750, 750);
 
-  bg = loadImage("res/background.jpg");
+  for (var i = 0; i < bulletSprites.length; i++) {
+    bulletSprites[i].resize(blockWidth, blockWidth);
+  }
 
   initKeys();
   parseMap();
@@ -154,7 +165,6 @@ function keyPressed() {
       break;
     case ' ':
       space = 1;
-      player.shootTimer = 0;
       break;
     default:
       break;

@@ -132,21 +132,20 @@ Player.prototype.shoot = function() {
     // bullets.push(new Bullet(this.pos.x, this.pos.y, this.dir));
     if (this.weapon.num_bullets == 5) {
       for (var i = 0; i <= PI; i += PI / 4) {
-        bullets.push(new Bullet(this.pos.x + blockWidth * (this.dir / 2.0 + 0.5),
+        bullets.push(new Bullet(this.pos.x,
           this.pos.y + blockWidth, this.dir, this.weapon.damage, this.weapon
           .speed * Math.cos(i), -20 * Math.sin(i), this.weapon.type));
       }
     } else if (this.weapon.num_bullets == 2) {
-      bullets.push(new Bullet(this.pos.x + blockWidth * (this.dir / 2.0 + 0.5),
+      bullets.push(new Bullet(this.pos.x,
         this.pos.y + blockWidth, this.dir, this.weapon.damage, this.weapon
         .speed, 0, this.weapon.type));
-      bullets.push(new Bullet(this.pos.x + blockWidth * (this.dir / 2.0 + 0.5),
+      bullets.push(new Bullet(this.pos.x,
         this.pos.y + blockWidth, -this.dir, this.weapon.damage, this.weapon
         .speed, 0, this.weapon.type));
     } else {
       for (var i = 0; i < this.weapon.num_bullets; i++) {
-        bullets.push(new Bullet(this.pos.x + blockWidth * (this.dir / 2.0 +
-            0.5),
+        bullets.push(new Bullet(this.pos.x,
           this.pos.y + blockWidth, this.dir, this.weapon.damage, this.weapon
           .speed, random(i * 2) - i, this.weapon.type));
       }

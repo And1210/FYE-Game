@@ -2,8 +2,8 @@ name: Andrew V.
 position: Vice President
 damage: 1
 fireRate: 3
-width: 25
-height: 36
+width: 37
+height: 50
 num_bullets: 1
 img: bullet
 speed: 1

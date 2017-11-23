@@ -2,8 +2,8 @@ name: Olivia
 position: Treasurer
 damage: 3
 fireRate: 20
-width: 30
-height: 36
+width: 50
+height: 50
 num_bullets: 6
 img: money
 speed: 1
