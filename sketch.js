@@ -10,7 +10,7 @@ var mapData = [];
 var mapBlocks = [];
 var surfaceBlocks = [];
 var blockImg;
-var blockWidth = 25;
+var blockWidth = 30;
 var a = 0,
   d = 0,
   w = 0,
@@ -45,7 +45,7 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(750, 750);
+  createCanvas(960, 900);
 
   for (var i = 0; i < bulletSprites.length; i++) {
     bulletSprites[i].resize(blockWidth, blockWidth);
@@ -53,7 +53,6 @@ function setup() {
 
   initKeys();
   parseMap();
-  blockWidth = width / mapData.length;
   setupBlocks();
   initSurfaceBlocks();
   player = new Player(200, 200);
@@ -108,7 +107,7 @@ function renderMap() {
 
 function addEnemies() {
   if (enemies.length < maxEnemies && millis() - spawnTimer >= 1000) {
-    enemies.push(new Enemy((14 + floor(random(2))) * blockWidth, blockWidth));
+    enemies.push(new Enemy((floor(width/blockWidth)/2 + floor(random(2)) - 1) * blockWidth, blockWidth));
     spawnTimer = millis();
   }
 }

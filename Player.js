@@ -3,7 +3,7 @@ function Player(x, y) {
   this.vel = createVector(0, 0);
   this.acc = createVector(0, 0);
   this.gridPos = createVector(floor(x / blockWidth), floor(y / blockWidth));
-  this.speed = 12;
+  this.speed = 15;
   this.dir = 1;
   this.dead = false;
   this.inContact = [false, false, false, false]; //left, right, top, bottom
@@ -120,7 +120,7 @@ Player.prototype.checkOutBounds = function() {
   this.gridPos.set(floor(this.pos.x / blockWidth), floor(this.pos.y /
     blockWidth));
 
-  if (this.gridPos.x < 1 || this.gridPos.x > 28 || this.gridPos.y > 27) {
+  if (this.gridPos.x < 1 || this.gridPos.x > floor(width/blockWidth) - 2 || this.gridPos.y > floor(height/blockWidth) - 3) {
     this.dead = true;
   }
 }

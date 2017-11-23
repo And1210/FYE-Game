@@ -127,7 +127,7 @@ Enemy.prototype.outBounds = function() {
   this.gridPos.set(floor(this.pos.x / blockWidth), floor(this.pos.y /
     blockWidth));
 
-  if (this.gridPos.x < 1 || this.gridPos.x > 28 || this.gridPos.y > 28)
+  if (this.gridPos.x < 1 || this.gridPos.x > floor(width/blockWidth) - 2 || this.gridPos.y > floor(height/blockWidth) - 3)
     return true;
   else {
     return false;

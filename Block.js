@@ -5,7 +5,7 @@ function Block(x, y, w, h, type) {
   this.height = h;
   this.type = type;
   this.img = blockImg;
-  this.img.resize(blockWidth, 0);
+  this.img.resize(blockWidth, blockWidth);
 }
 
 Block.prototype.setColour = function(r, g, b) {
