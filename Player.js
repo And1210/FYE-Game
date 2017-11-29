@@ -2,6 +2,7 @@ function Player(x, y) {
   this.pos = createVector(x, y);
   this.vel = createVector(0, 0);
   this.acc = createVector(0, 0);
+  this.prevAcc = createVector(0, 0);
   this.gridPos = createVector(floor(x / blockWidth), floor(y / blockWidth));
   this.speed = 15;
   this.dir = 1;
@@ -44,9 +45,7 @@ Player.prototype.render = function() {
 }
 
 Player.prototype.gravity = function() {
-  if (!this.inContact[3]) {
-    this.applyForce(0, 0.75);
-  }
+  this.applyForce(0, 0.75);
 }
 
 Player.prototype.checkEnemyCollision = function() {
@@ -61,58 +60,6 @@ Player.prototype.checkCrateCollision = function() {
   if (crate.collision(this.pos, blockWidth, 2 * blockWidth)) {
     crate.spawn();
     this.switchWeapon(floor(random(weaponNum)));
-  }
-}
-
-Player.prototype.checkContact = function() {
-  this.gridPos.set(floor(this.pos.x / blockWidth), floor(this.pos.y /
-    blockWidth));
-
-  if (mapBlocks[this.gridPos.y + 2][this.gridPos.x].type != 0 ||
-    mapBlocks[this.gridPos.y + 2][this.gridPos.x + 1].type != 0 &&
-    mapBlocks[this.gridPos.y][this.gridPos.x + 1].type == 0) {
-    this.inContact[3] = true;
-  } else {
-    this.inContact[3] = false;
-  }
-
-  if (mapBlocks[this.gridPos.y - 1][this.gridPos.x].type != 0 ||
-    mapBlocks[this.gridPos.y - 1][this.gridPos.x + 1].type != 0 &&
-    mapBlocks[this.gridPos.y][this.gridPos.x + 1].type == 0) {
-    this.inContact[2] = true;
-  } else {
-    this.inContact[2] = false;
-  }
-
-  if (mapBlocks[this.gridPos.y][this.gridPos.x + 1].type != 0 ||
-    mapBlocks[this.gridPos.y + 1][this.gridPos.x + 1].type != 0) {
-    this.inContact[1] = true;
-  } else {
-    this.inContact[1] = false;
-  }
-
-  if (mapBlocks[this.gridPos.y][this.gridPos.x - 1].type != 0 ||
-    mapBlocks[this.gridPos.y + 1][this.gridPos.x - 1].type != 0) {
-    this.inContact[0] = true;
-  } else {
-    this.inContact[0] = false;
-  }
-
-  if (this.inContact[3] && this.vel.y > 0) {
-    this.vel.set(this.vel.x, 0);
-    this.pos.set(this.pos.x, this.gridPos.y * blockWidth);
-  }
-  if (this.inContact[2] && this.vel.y < 0) {
-    this.vel.set(this.vel.x, 0);
-    this.pos.set(this.pos.x, this.gridPos.y * blockWidth + 1);
-  }
-  if (this.inContact[1] && this.vel.x > 0) {
-    this.vel.set(0, this.vel.y);
-    this.pos.set(this.gridPos.x * blockWidth, this.pos.y);
-  }
-  if (this.inContact[0] && this.vel.x < 0) {
-    this.vel.set(0, this.vel.y);
-    this.pos.set(this.gridPos.x * blockWidth, this.pos.y);
   }
 }
 
@@ -156,8 +103,9 @@ Player.prototype.shoot = function() {
 Player.prototype.kinematics = function() {
   this.applyForce(-this.vel.x * 0.99, 0);
 
-  this.vel.add(this.acc);
   this.pos.add(this.vel);
+  this.vel.add(this.acc);
+  this.prevAcc.set(this.acc.x, this.acc.y);
   this.acc.mult(0);
 }
 
@@ -166,11 +114,11 @@ Player.prototype.applyForce = function(x, y) {
 }
 
 Player.prototype.checkInput = function() {
-  if (a == 1 && !this.inContact[0]) {
+  if (a == 1) {
     this.applyForce(-this.speed / 2, 0);
     this.dir = -1;
   }
-  if (d == 1 && !this.inContact[1]) {
+  if (d == 1) {
     this.applyForce(this.speed / 2, 0);
     this.dir = 1;
   }
@@ -187,4 +135,73 @@ Player.prototype.switchWeapon = function(type) {
   this.weapon = new Weapon(this.type);
   this.sprite = weaponSprites[this.type];
   this.sprite.resize(this.weapon.width, this.weapon.height);
+}
+
+Player.prototype.checkContact = function() {
+  this.gridPos.set(floor(this.pos.x / blockWidth), floor(this.pos.y /
+    blockWidth));
+  var xT = this.pos.x + this.vel.x;
+  var yT = this.pos.y + this.vel.y;
+  var rPosU = toGrid(xT + this.weapon.width, yT);
+  var rPosD = toGrid(xT + this.weapon.width, yT + this.weapon.height);
+  var lPosU = toGrid(xT, yT);
+  var lPosD = toGrid(xT, yT + this.weapon.height);
+
+  console.log(this.pos.x + ' ' + this.vel.x);
+  //Checking bottom
+  if (mapBlocks[lPosD.y][lPosD.x].type != 0 || mapBlocks[rPosD.y][rPosD.x].type != 0) {
+    this.inContact[3] = true;
+    this.vel.set(this.vel.x, 0);
+  } else {
+    this.inContact[3] = false;
+  }
+
+  xT = this.pos.x + this.vel.x;
+  yT = this.pos.y + this.vel.y;
+  rPosU = toGrid(xT + this.weapon.width, yT);
+  rPosD = toGrid(xT + this.weapon.width, yT + this.weapon.height);
+  lPosU = toGrid(xT, yT);
+  lPosD = toGrid(xT, yT + this.weapon.height);
+
+  //Checking top
+  if (mapBlocks[lPosU.y][lPosU.x].type != 0 || mapBlocks[rPosU.y][rPosU.x].type != 0) {
+    this.inContact[2] = true;
+    this.vel.set(this.vel.x, 0);
+  } else {
+    this.inContact[2] = false;
+  }
+
+  xT = this.pos.x + this.vel.x * 2;
+  yT = this.pos.y + this.vel.y;
+  rPosU = toGrid(xT + this.weapon.width, yT);
+  rPosD = toGrid(xT + this.weapon.width, yT + this.weapon.height);
+  lPosU = toGrid(xT, yT);
+  lPosD = toGrid(xT, yT + this.weapon.height);
+
+  //Checking right
+  if (mapBlocks[rPosU.y][rPosU.x].type != 0 || mapBlocks[rPosD.y][rPosD.x].type != 0
+    || mapBlocks[floor((rPosU.y+rPosD.y)/2)][rPosU.x].type != 0) {
+    this.inContact[1] = true;
+    this.vel.set(0, this.vel.y);
+  } else {
+    this.inContact[1] = false;
+  }
+
+  xT = this.pos.x + this.vel.x - 4.5;
+  yT = this.pos.y + this.vel.y;
+  rPosU = toGrid(xT + this.weapon.width, yT);
+  rPosD = toGrid(xT + this.weapon.width, yT + this.weapon.height);
+  lPosU = toGrid(xT, yT);
+  lPosD = toGrid(xT, yT + this.weapon.height);
+
+  //Checking left
+  if (mapBlocks[lPosU.y][lPosU.x].type != 0 || mapBlocks[lPosD.y][lPosD.x].type != 0
+    || mapBlocks[floor((lPosU.y+lPosD.y)/2)][lPosU.x].type != 0) {
+    this.inContact[0] = true;
+    this.vel.set(0, this.vel.y);
+  } else {
+    this.inContact[0] = false;
+  }
+
+  // console.log(this.inContact);
 }

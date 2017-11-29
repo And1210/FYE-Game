@@ -197,3 +197,7 @@ function checkBgSize() {
     bg.resize(width, height);
   }
 }
+
+function toGrid(x, y) {
+  return createVector(floor(x / blockWidth), floor(y / blockWidth));
+}
