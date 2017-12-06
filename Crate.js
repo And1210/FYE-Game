@@ -1,5 +1,7 @@
 function Crate() {
   this.pos = createVector(0, 0);
+  this.sprite = jacketSprite;
+  this.sprite.resize(blockWidth, blockWidth);
 
   this.spawn();
 }
@@ -13,7 +15,8 @@ Crate.prototype.spawn = function() {
 Crate.prototype.render = function() {
   noStroke();
   fill(0);
-  rect(this.pos.x, this.pos.y, blockWidth, blockWidth);
+  // rect(this.pos.x, this.pos.y, blockWidth, blockWidth);
+  image(this.sprite, this.pos.x, this.pos.y);
 }
 
 Crate.prototype.collision = function(pos, w, h) {

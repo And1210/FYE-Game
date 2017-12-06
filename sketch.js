@@ -5,6 +5,9 @@ var mapRawData;
 var weaponProperties = [];
 var weaponSprites = [];
 var bulletSprites = [];
+var enemySprites = [];
+var enemyNum = 4;
+var jacketSprite;
 var weaponNum = 12;
 var mapData = [];
 var mapBlocks = [];
@@ -33,6 +36,10 @@ function preload() {
     weaponSprites.push(loadImage("res/weapons/weapon" + i + ".png"));
   }
 
+  for (var i = 0; i < enemyNum; i++) {
+    enemySprites.push(loadImage("res/enemies/" + i + ".png"));
+  }
+
   bulletSprites.push(loadImage("res/bullets/bullet.png"));
   bulletSprites.push(loadImage("res/bullets/bed.png"));
   bulletSprites.push(loadImage("res/bullets/money.png"));
@@ -40,12 +47,14 @@ function preload() {
   bulletSprites.push(loadImage("res/bullets/chrome.png"));
   bulletSprites.push(loadImage("res/bullets/instagram.png"));
 
+  jacketSprite = loadImage("res/jacket.png");
+
   blockImg = loadImage("res/block.png");
   bg = loadImage("res/background.jpg");
 }
 
 function setup() {
-  createCanvas(960, 900);
+  createCanvas(1020, 900);
 
   for (var i = 0; i < bulletSprites.length; i++) {
     bulletSprites[i].resize(blockWidth, blockWidth);
@@ -106,7 +115,7 @@ function renderMap() {
 }
 
 function addEnemies() {
-  if (enemies.length < maxEnemies && millis() - spawnTimer >= 1000) {
+  if (enemies.length < maxEnemies && millis() - spawnTimer >= 2000) {
     enemies.push(new Enemy((floor(width/blockWidth)/2 + floor(random(2)) - 1) * blockWidth, blockWidth));
     spawnTimer = millis();
   }

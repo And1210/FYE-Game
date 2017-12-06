@@ -4,7 +4,7 @@ function Player(x, y) {
   this.acc = createVector(0, 0);
   this.prevAcc = createVector(0, 0);
   this.gridPos = createVector(floor(x / blockWidth), floor(y / blockWidth));
-  this.speed = 15;
+  this.speed = 17;
   this.dir = 1;
   this.dead = false;
   this.inContact = [false, false, false, false]; //left, right, top, bottom
@@ -57,7 +57,7 @@ Player.prototype.checkEnemyCollision = function() {
 }
 
 Player.prototype.checkCrateCollision = function() {
-  if (crate.collision(this.pos, blockWidth, 2 * blockWidth)) {
+  if (crate.collision(this.pos, this.weapon.width, this.weapon.height)) {
     crate.spawn();
     this.switchWeapon(floor(random(weaponNum)));
   }
@@ -80,20 +80,20 @@ Player.prototype.shoot = function() {
     if (this.weapon.num_bullets == 5) {
       for (var i = 0; i <= PI; i += PI / 4) {
         bullets.push(new Bullet(this.pos.x,
-          this.pos.y + blockWidth, this.dir, this.weapon.damage, this.weapon
+          this.pos.y + 20, this.dir, this.weapon.damage, this.weapon
           .speed * Math.cos(i), -20 * Math.sin(i), this.weapon.type));
       }
     } else if (this.weapon.num_bullets == 2) {
       bullets.push(new Bullet(this.pos.x,
-        this.pos.y + blockWidth, this.dir, this.weapon.damage, this.weapon
+        this.pos.y + 20, this.dir, this.weapon.damage, this.weapon
         .speed, 0, this.weapon.type));
       bullets.push(new Bullet(this.pos.x,
-        this.pos.y + blockWidth, -this.dir, this.weapon.damage, this.weapon
+        this.pos.y + 20, -this.dir, this.weapon.damage, this.weapon
         .speed, 0, this.weapon.type));
     } else {
       for (var i = 0; i < this.weapon.num_bullets; i++) {
         bullets.push(new Bullet(this.pos.x,
-          this.pos.y + blockWidth, this.dir, this.weapon.damage, this.weapon
+          this.pos.y + 20, this.dir, this.weapon.damage, this.weapon
           .speed, random(i * 2) - i, this.weapon.type));
       }
     }
@@ -147,7 +147,6 @@ Player.prototype.checkContact = function() {
   var lPosU = toGrid(xT, yT);
   var lPosD = toGrid(xT, yT + this.weapon.height);
 
-  console.log(this.pos.x + ' ' + this.vel.x);
   //Checking bottom
   if (mapBlocks[lPosD.y][lPosD.x].type != 0 || mapBlocks[rPosD.y][rPosD.x].type != 0) {
     this.inContact[3] = true;
@@ -187,7 +186,7 @@ Player.prototype.checkContact = function() {
     this.inContact[1] = false;
   }
 
-  xT = this.pos.x + this.vel.x - 4.5;
+  xT = this.pos.x + this.vel.x * 2;
   yT = this.pos.y + this.vel.y;
   rPosU = toGrid(xT + this.weapon.width, yT);
   rPosD = toGrid(xT + this.weapon.width, yT + this.weapon.height);

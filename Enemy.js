@@ -7,6 +7,8 @@ function Enemy(x, y) {
   this.health = 10;
   this.speed = 3;
   this.inContact = [false, false, false, false]; //left, right, top, bottom
+  this.sprite = enemySprites[floor(random(enemyNum))];
+  this.sprite.resize(blockWidth, 0);
 
   this.dir;
   if (random() >= 0.5) {
@@ -26,7 +28,15 @@ Enemy.prototype.update = function() {
 Enemy.prototype.render = function() {
   noStroke();
   fill(127);
-  rect(this.pos.x, this.pos.y, blockWidth, blockWidth);
+  //rect(this.pos.x, this.pos.y, blockWidth, blockWidth);
+  push();
+  imageMode(CENTER);
+  translate(this.pos.x + this.sprite.width / 2, this.pos.y - (this.sprite.height -
+    blockWidth) + this.sprite.height / 2);
+  scale(this.dir * -1, 1);
+  image(this.sprite, 0, 0);
+  imageMode(CORNER);
+  pop();
 }
 
 Enemy.prototype.gravity = function() {
@@ -105,7 +115,8 @@ Enemy.prototype.move = function() {
 
 Enemy.prototype.collision = function(pos, w, h) {
   var points = [pos.copy(), pos.copy().add(w, 0), pos.copy().add(w, h),
-                pos.copy().add(0, h)];
+    pos.copy().add(0, h)
+  ];
   var out = false;
   for (var i = 0; i < 4; i++) {
     if (this.inside(points[i])) {
@@ -127,7 +138,8 @@ Enemy.prototype.outBounds = function() {
   this.gridPos.set(floor(this.pos.x / blockWidth), floor(this.pos.y /
     blockWidth));
 
-  if (this.gridPos.x < 1 || this.gridPos.x > floor(width/blockWidth) - 2 || this.gridPos.y > floor(height/blockWidth) - 3)
+  if (this.gridPos.x < 1 || this.gridPos.x > floor(width / blockWidth) - 2 ||
+    this.gridPos.y > floor(height / blockWidth) - 3)
     return true;
   else {
     return false;
