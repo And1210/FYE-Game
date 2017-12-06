@@ -59,6 +59,7 @@ Player.prototype.checkEnemyCollision = function() {
 Player.prototype.checkCrateCollision = function() {
   if (crate.collision(this.pos, this.weapon.width, this.weapon.height)) {
     crate.spawn();
+    score++;
     this.switchWeapon(floor(random(weaponNum)));
   }
 }

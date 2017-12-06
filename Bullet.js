@@ -6,6 +6,8 @@ function Bullet(x, y, dir, dmg, vX, vY, type) {
   this.width = blockWidth / 2;
   this.height = blockWidth / 2;
   this.type = type;
+  this.gridPos = createVector(0, 0);
+  this.life = 4;
 
   this.toDelete = false;
   this.explode = false;
@@ -15,8 +17,24 @@ function Bullet(x, y, dir, dmg, vX, vY, type) {
 Bullet.prototype.update = function() {
   this.pos.add(this.vel);
 
+  if (this.vel.x == 0) {
+    this.applyGravity();
+  }
+  if (this.life <= 0) {
+    this.destroy();
+  }
+
   this.checkBounds();
   this.enemyHit();
+}
+
+Bullet.prototype.applyGravity = function() {
+  this.gridPos.set(floor(this.pos.x/blockWidth), floor((this.pos.y + this.vel.y)/blockWidth));
+  if (mapBlocks[this.gridPos.y+1][this.gridPos.x].type == 0) {
+    this.vel.add(0, 0.75);
+  } else {
+    this.vel.y = 0;
+  }
 }
 
 Bullet.prototype.render = function() {
@@ -73,6 +91,7 @@ Bullet.prototype.checkBounds = function() {
         this.toDelete = true;
       } else {
         this.pos = createVector(width - this.pos.x, this.pos.y);
+        this.life--;
       }
   }
 }

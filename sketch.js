@@ -25,6 +25,8 @@ var maxEnemies = 10;
 var spawnTimer = 0;
 var bullets = [];
 var frameCount = 0;
+var score = 0;
+var inMenus = false;
 
 var crate;
 
@@ -70,6 +72,27 @@ function setup() {
 }
 
 function draw() {
+  if (inMenus) {
+    menuFrame();
+  } else {
+    gameFrame();
+    if (player.dead) {
+      inMenus = true;
+    }
+  }
+
+  frameCount++;
+}
+
+function menuFrame() {
+  checkBgSize();
+  score = 0;
+
+  background(255);
+  image(bg, 0, 0);
+}
+
+function gameFrame() {
   checkBgSize();
 
   background(255);
@@ -102,7 +125,13 @@ function draw() {
     }
   }
 
-  frameCount++;
+  //Score Manager
+  textSize(32);
+  textAlign(CENTER, TOP);
+  fill(255);
+  stroke(0);
+  strokeWeight(5);
+  text(score, this.width / 2, blockWidth * 3);
 }
 
 function renderMap() {
