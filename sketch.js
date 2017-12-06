@@ -18,7 +18,11 @@ var a = 0,
   d = 0,
   w = 0,
   s = 0,
-  space = 0;
+  space = 0,
+  up = 0,
+  down = 0,
+  left = 0,
+  right = 0;
 var player;
 var enemies = [];
 var maxEnemies = 10;
@@ -27,6 +31,7 @@ var bullets = [];
 var frameCount = 0;
 var score = 0;
 var inMenus = false;
+var menuFont;
 
 var crate;
 
@@ -53,10 +58,15 @@ function preload() {
 
   blockImg = loadImage("res/block.png");
   bg = loadImage("res/background.jpg");
+
+  menuFont = loadFont("res/SaucerBB.ttf");
 }
 
 function setup() {
-  createCanvas(1020, 900);
+  createCanvas(1080, 900);
+
+  //textFont(menuFont);
+  textAlign(CENTER, TOP);
 
   for (var i = 0; i < bulletSprites.length; i++) {
     bulletSprites[i].resize(blockWidth, blockWidth);
@@ -90,6 +100,11 @@ function menuFrame() {
 
   background(255);
   image(bg, 0, 0);
+
+  fill(0);
+  stroke(255);
+  strokeWeight(3);
+  text("FROSHHHHH", width / 2, height / 2);
 }
 
 function gameFrame() {
@@ -127,7 +142,6 @@ function gameFrame() {
 
   //Score Manager
   textSize(32);
-  textAlign(CENTER, TOP);
   fill(255);
   stroke(0);
   strokeWeight(5);
@@ -206,6 +220,23 @@ function keyPressed() {
     default:
       break;
   }
+
+  switch (keyCode) {
+    case UP_ARROW:
+      up = 1;
+      break;
+    case DOWN_ARROW:
+      down = 1;
+      break;
+    case LEFT_ARROW:
+      left = 1;
+      break;
+    case RIGHT_ARROW:
+      right = 1;
+      break;
+    default:
+      break;
+  }
 }
 
 function keyReleased() {
@@ -224,6 +255,23 @@ function keyReleased() {
       break;
     case ' ':
       space = 0;
+      break;
+    default:
+      break;
+  }
+
+  switch (keyCode) {
+    case UP_ARROW:
+      up = 0;
+      break;
+    case DOWN_ARROW:
+      down = 0;
+      break;
+    case LEFT_ARROW:
+      left = 0;
+      break;
+    case RIGHT_ARROW:
+      right = 0;
       break;
     default:
       break;

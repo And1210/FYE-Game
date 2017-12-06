@@ -115,18 +115,18 @@ Player.prototype.applyForce = function(x, y) {
 }
 
 Player.prototype.checkInput = function() {
-  if (a == 1) {
+  if (a == 1 || left == 1) {
     this.applyForce(-this.speed / 2, 0);
     this.dir = -1;
   }
-  if (d == 1) {
+  if (d == 1 || right == 1) {
     this.applyForce(this.speed / 2, 0);
     this.dir = 1;
   }
-  if (w == 1 && this.inContact[3] == true) {
+  if ((w == 1 || up == 1) && this.inContact[3] == true) {
     this.applyForce(0, -this.speed);
   }
-  if (s == 1) {
+  if (s == 1 || down == 1) {
     //this.applyForce(0, this.speed);
   }
 }
