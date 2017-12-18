@@ -10,6 +10,7 @@ function Player(x, y) {
   this.inContact = [false, false, false, false]; //left, right, top, bottom
   this.shootTimer = 0;
   this.shootRate = 35;
+  this.visible = true;
 
   this.type = 0;
   this.weapon = new Weapon(this.type);
@@ -18,7 +19,7 @@ function Player(x, y) {
 }
 
 Player.prototype.update = function() {
-  // this.checkEnemyCollision();
+  this.checkEnemyCollision();
   this.checkCrateCollision();
   this.checkContact();
   this.checkInput();
@@ -31,7 +32,7 @@ Player.prototype.update = function() {
 Player.prototype.render = function() {
   noStroke();
   fill(0);
-  if (!this.dead) {
+  if (!this.dead && this.visible) {
     // rect(this.pos.x, this.pos.y, blockWidth, blockWidth * 2);
     push();
     imageMode(CENTER);
@@ -50,19 +51,46 @@ Player.prototype.gravity = function() {
 
 Player.prototype.checkEnemyCollision = function() {
   for (var i = 0; i < enemies.length; i++) {
-    if (enemies[i].collision(this.pos, blockWidth, 2 * blockWidth)) {
+    if (this.visible && enemies[i].collision(this.pos, this.weapon.width, this.weapon.height)) {
       this.dead = true;
     }
   }
 }
 
 Player.prototype.checkCrateCollision = function() {
-  if (crate.collision(this.pos, this.weapon.width, this.weapon.height)) {
+  if (crate.collision(this.pos, this.weapon.width, this.weapon.height) ||
+      this.collision(crate.pos, blockWidth, blockWidth)) {
     crate.spawn();
     score++;
     this.switchWeapon(floor(random(weaponNum)));
   }
 }
+
+Player.prototype.collision = function(pos, w, h) {
+  var points = [pos.copy(), pos.copy().add(w, 0), pos.copy().add(w, h),
+    pos.copy().add(0, h)
+  ];
+  var out = false;
+  for (var i = 0; i < 4; i++) {
+    if (this.inside(points[i])) {
+      out = true;
+    }
+  }
+  return out;
+}
+
+Player.prototype.inside = function(p) {
+  if (p.x >= this.pos.x && p.x <= this.pos.x + this.weapon.width) {
+    if (p.y >= this.pos.y && p.y <= this.pos.y + this.weapon.height) {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+}
+
 
 Player.prototype.checkOutBounds = function() {
   this.gridPos.set(floor(this.pos.x / blockWidth), floor(this.pos.y /
@@ -96,6 +124,10 @@ Player.prototype.shoot = function() {
         bullets.push(new Bullet(this.pos.x,
           this.pos.y + 20, this.dir, this.weapon.damage, this.weapon
           .speed, random(i * 2) - i, this.weapon.type));
+      }
+
+      if (this.weapon.type == 2) {
+        this.visible = !this.visible;
       }
     }
   }
@@ -133,6 +165,7 @@ Player.prototype.checkInput = function() {
 
 Player.prototype.switchWeapon = function(type) {
   this.type = type;
+  this.visible = true;
   this.weapon = new Weapon(this.type);
   this.sprite = weaponSprites[this.type];
   this.sprite.resize(this.weapon.width, this.weapon.height);

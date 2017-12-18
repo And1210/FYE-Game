@@ -1,9 +1,25 @@
+var descriptions = [
+  "Dis ya boi the president here.\nNathan's the name, flexing on y'all's the game.\nMy gun may be weak but my rhymes are strong.\nI'm just like a carrot: orange, dirty, and long ;)",
+  "Hey folks! Name's Mike Pen- ANDREW VASILA.\nDefinetly not Mike Pence, nope, I swear.\nMy hobbies include: Christmas, Christmas, and Christmas.\nLink me on tinder, bumble, grindr.... y'know, whatever!",
+  "Second Andrew of the exec here, usually known as Farley.\nI'm your AMS rep, definitely been to all of those meetings.....\nSome might say I'm INVISIBLE during them.\nI don't really know what my guy does, you mind figuring it out?",
+  "Feeling down? Maybe dissatisfied?\nYes, I am talking sexually, what else would I be talking about?\nDon't you worry! The BED Fun(d) rep is here.\nName's Matt Julseth and I'll EXPLODE all over your problems.",
+  "Hey, I'm Tess and I'm Thomas!\nWe've been desiging that blessed bling y'all have ordered.\nCool kids invest in the latest fashion.How will you feel\nwhen all you friends are repping that Sci 21' crest and you ain't?",
+  "Monique and Mitch here planning some sick events for our year.\nYa, we swear we're doing stuff...\nThere are things coming for next semester...\nIt was a rough start ok.",
+  "How did I get charged with managing the money?\nWell I guess we're all on this rollercoaster ride to see.\nMy name is Olivia and I'm the treasurer.\nBuy year merch.",
+  "WHO'S READY FOR BEWIC!!! Oh, you don't know what that is??\n(Lowkey, we aren't really sure either, like honestly\nwhat could that stand for. Boi Eh We In Campus???)\nLaurel and Liam here, we da athELITES of dis group.",
+  "Hey everyone, Graeme and Alex here.\nApparently we broke the matching first letter streak.\nWe're the Sci Formal reps which means we sit back and...\nWell, we don't do much, but we want to, but sitting's nice.",
+  "I want you to look up to the top of this website.\nThere? Awesome, ya we made this beautiful specimen.\nOur names are Laura and Kiki.\nWe're the webmaster wizards of Sci 21' Exec.",
+  "Hey y'all! Wanna know how to start a bomb insta?\nYa, so just get other people to send you memes.\nThen post these memes and get popular off others' work, so simple!\nI'm Kelsey and I'm the FYE scribe/social media person.",
+  "The c-men of year exec here! Chas, Claire, and Christina.\nNot only do our names begin with 'c' but so do our skills.\nCalves, can't-seem-to-show-up, and confused easily describe us perfectly.\nWe are your section reps and if you ever see us\njust yell 'HEY, THAT'S SOME OF MY C-MEN!'"
+];
+
 var bg;
 var bgMusic = [];
 var pSprites = [];
 var mapRawData;
 var weaponProperties = [];
 var weaponSprites = [];
+var weaponIcons = [];
 var bulletSprites = [];
 var enemySprites = [];
 var enemyNum = 4;
@@ -30,8 +46,11 @@ var spawnTimer = 0;
 var bullets = [];
 var frameCount = 0;
 var score = 0;
-var inMenus = false;
+var inMenus = true;
+var meet = false;
 var menuFont;
+var curMeet = 0;
+var released = true;
 
 var crate;
 
@@ -41,6 +60,7 @@ function preload() {
   for (var i = 0; i < weaponNum; i++) {
     weaponProperties.push(loadStrings("weapons/weapon" + i + ".txt"));
     weaponSprites.push(loadImage("res/weapons/weapon" + i + ".png"));
+    weaponIcons.push(loadImage("res/weapons/weapon" + i + ".png"));
   }
 
   for (var i = 0; i < enemyNum; i++) {
@@ -72,6 +92,10 @@ function setup() {
     bulletSprites[i].resize(blockWidth, blockWidth);
   }
 
+  for (var i = 0; i < weaponSprites.length; i++) {
+    weaponIcons[i].resize(0, height / 3);
+  }
+
   initKeys();
   parseMap();
   setupBlocks();
@@ -84,6 +108,8 @@ function setup() {
 function draw() {
   if (inMenus) {
     menuFrame();
+  } else if (meet) {
+    meetFrame();
   } else {
     gameFrame();
     if (player.dead) {
@@ -104,7 +130,80 @@ function menuFrame() {
   fill(0);
   stroke(255);
   strokeWeight(3);
-  text("FROSHHHHH", width / 2, height / 2);
+  textSize(64);
+  text("FROSHHHHH", width / 2, height / 4);
+  textSize(32);
+  text("Play", width / 2, height / 2.25);
+  if (mouseY > height / 2.25 && mouseY < height / 2.25 + 64) {
+    if (mouseIsPressed) {
+      inMenus = false;
+    }
+  }
+  text("Meet the Exec", width / 2, height / 1.75);
+  if (mouseY > height / 1.75 && mouseY < height / 1.75 + 64) {
+    if (mouseIsPressed) {
+      inMenus = false;
+      meet = true;
+    }
+  }
+}
+
+function meetFrame() {
+  checkBgSize();
+
+  background(255);
+  imageMode(CORNER);
+  image(bg, 0, 0);
+
+  imageMode(CENTER, TOP);
+  image(weaponIcons[curMeet], width / 2, height / 3);
+
+  textAlign(LEFT, LEFT);
+  textSize(40);
+  text("Back", 20, 20);
+  if (mouseY < 60 && mouseIsPressed) {
+    meet = false;
+    inMenus = true;
+    imageMode(CORNER);
+    textAlign(CENTER, TOP);
+  }
+
+  if (released) {
+    if (mouseX > 2 * width / 3 && mouseIsPressed) {
+      curMeet++;
+      curMeet %= 12;
+      released = false;
+    } else if (mouseX < width / 3 && mouseIsPressed) {
+      curMeet--;
+      if (curMeet < 0)
+        curMeet = 11;
+      released = false;
+    }
+  }
+
+  textSize(32);
+  textAlign(CENTER, TOP);
+  text(descriptions[curMeet], width / 2, 1.75 * height / 3);
+
+  beginShape();
+  vertex(5 * width / 6, height / 2 - 20);
+  vertex(5.5 * width / 6, height / 2 - 20);
+  vertex(5.5 * width / 6, height / 2 - 40);
+  vertex(5.75 * width / 6, height / 2);
+  vertex(5.5 * width / 6, height / 2 + 40);
+  vertex(5.5 * width / 6, height / 2 + 20);
+  vertex(5 * width / 6, height / 2 + 20);
+  endShape();
+
+  beginShape();
+  vertex(1 * width / 6, height / 2 - 20);
+  vertex(0.5 * width / 6, height / 2 - 20);
+  vertex(0.5 * width / 6, height / 2 - 40);
+  vertex(0.25 * width / 6, height / 2);
+  vertex(0.5 * width / 6, height / 2 + 40);
+  vertex(0.5 * width / 6, height / 2 + 20);
+  vertex(1 * width / 6, height / 2 + 20);
+  endShape();
 }
 
 function gameFrame() {
@@ -145,7 +244,9 @@ function gameFrame() {
   fill(255);
   stroke(0);
   strokeWeight(5);
+  textAlign(CENTER, CENTER);
   text(score, this.width / 2, blockWidth * 3);
+  textAlign(CENTER, TOP);
 }
 
 function renderMap() {
@@ -159,7 +260,8 @@ function renderMap() {
 
 function addEnemies() {
   if (enemies.length < maxEnemies && millis() - spawnTimer >= 2000) {
-    enemies.push(new Enemy((floor(width/blockWidth)/2 + floor(random(2)) - 1) * blockWidth, blockWidth));
+    enemies.push(new Enemy((floor(width / blockWidth) / 2 + floor(random(2)) -
+      1) * blockWidth, blockWidth));
     spawnTimer = millis();
   }
 }
@@ -191,7 +293,7 @@ function setupBlocks() {
 function initSurfaceBlocks() {
   for (var i = 0; i < (width / blockWidth); i++) {
     for (var j = 8; j < (height / blockWidth); j++) {
-      if (mapBlocks[j][i].type != 0 && mapBlocks[j-1][i].type == 0) {
+      if (mapBlocks[j][i].type != 0 && mapBlocks[j - 1][i].type == 0) {
         surfaceBlocks.push(mapBlocks[j][i]);
       }
     }
@@ -276,6 +378,10 @@ function keyReleased() {
     default:
       break;
   }
+}
+
+function mouseReleased() {
+  released = true;
 }
 
 function checkBgSize() {
