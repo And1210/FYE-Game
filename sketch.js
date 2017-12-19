@@ -29,7 +29,7 @@ var mapData = [];
 var mapBlocks = [];
 var surfaceBlocks = [];
 var blockImg;
-var blockWidth = 30;
+var blockWidth = 25;
 var a = 0,
   d = 0,
   w = 0,
@@ -48,6 +48,7 @@ var frameCount = 0;
 var score = 0;
 var inMenus = true;
 var meet = false;
+var help = false;
 var menuFont;
 var curMeet = 0;
 var released = true;
@@ -83,7 +84,12 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(1080, 900);
+  var write = createWriter("highscore.json");
+  write.print(2);
+  write.close();
+  write.flush();
+
+  createCanvas(blockWidth * 36, blockWidth * 30);
 
   //textFont(menuFont);
   textAlign(CENTER, TOP);
@@ -100,7 +106,7 @@ function setup() {
   parseMap();
   setupBlocks();
   initSurfaceBlocks();
-  player = new Player(200, 200);
+  player = new Player(width / 2, height / 2);
 
   crate = new Crate();
 }
@@ -110,10 +116,15 @@ function draw() {
     menuFrame();
   } else if (meet) {
     meetFrame();
+  } else if (help) {
+    helpFrame();
   } else {
     gameFrame();
     if (player.dead) {
       inMenus = true;
+      enemies = [];
+      bullets = [];
+      player = new Player(width / 2, height / 2);
     }
   }
 
@@ -130,21 +141,49 @@ function menuFrame() {
   fill(0);
   stroke(255);
   strokeWeight(3);
-  textSize(64);
+  textSize(64*width/1080);
   text("FROSHHHHH", width / 2, height / 4);
   textSize(32);
   text("Play", width / 2, height / 2.25);
-  if (mouseY > height / 2.25 && mouseY < height / 2.25 + 64) {
+  if (mouseY > height / 2.25 && mouseY < height / 2.25 + 64*width/1080) {
     if (mouseIsPressed) {
       inMenus = false;
     }
   }
-  text("Meet the Exec", width / 2, height / 1.75);
-  if (mouseY > height / 1.75 && mouseY < height / 1.75 + 64) {
+  text("Meet the Exec", width / 2, height / 1.85);
+  if (mouseY > height / 1.85 && mouseY < height / 1.85 + 64*width/1080) {
     if (mouseIsPressed) {
       inMenus = false;
       meet = true;
     }
+  }
+  text("Help", width / 2, height / 1.60);
+  if (mouseY > height / 1.60 && mouseY < height / 1.60 + 64*width/1080) {
+    if (mouseIsPressed) {
+      inMenus = false;
+      help = true;
+    }
+  }
+}
+
+function helpFrame() {
+  checkBgSize();
+
+  background(255);
+  imageMode(CORNER);
+  image(bg, 0, 0);
+
+  var data = "How to Play:\n\nUse the arrow keys or WASD to move around\nand space to shoot! The goal of the game\nis to collect as many GPAs as you can.\nEverytime you get one it will give you a new\nYear Exec Member. Don't let the enemies reach the\nbottom or their spawn rate will increase.";
+  textAlign(CENTER, CENTER);
+  text(data, width / 2, height / 2);
+
+  textAlign(LEFT, TOP);
+  text("Back", 20, 20);
+  if (mouseY < 60 && mouseIsPressed) {
+    meet = false;
+    inMenus = true;
+    imageMode(CORNER);
+    textAlign(CENTER, TOP);
   }
 }
 
@@ -159,7 +198,7 @@ function meetFrame() {
   image(weaponIcons[curMeet], width / 2, height / 3);
 
   textAlign(LEFT, LEFT);
-  textSize(40);
+  textSize(40*width/1080);
   text("Back", 20, 20);
   if (mouseY < 60 && mouseIsPressed) {
     meet = false;

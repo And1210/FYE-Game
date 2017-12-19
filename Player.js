@@ -4,7 +4,7 @@ function Player(x, y) {
   this.acc = createVector(0, 0);
   this.prevAcc = createVector(0, 0);
   this.gridPos = createVector(floor(x / blockWidth), floor(y / blockWidth));
-  this.speed = 17;
+  this.speed = 17*width/1080;
   this.dir = 1;
   this.dead = false;
   this.inContact = [false, false, false, false]; //left, right, top, bottom
@@ -62,7 +62,11 @@ Player.prototype.checkCrateCollision = function() {
       this.collision(crate.pos, blockWidth, blockWidth)) {
     crate.spawn();
     score++;
+    preWidth = this.weapon.width/blockWidth;
     this.switchWeapon(floor(random(weaponNum)));
+    if (this.pos.x > width / 2) {
+      this.pos.add(-(this.weapon.width/blockWidth - preWidth)*blockWidth, 0);
+    }
   }
 }
 
