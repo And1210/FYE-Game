@@ -139,9 +139,11 @@ Enemy.prototype.outBounds = function() {
     blockWidth));
 
   if (this.gridPos.x < 1 || this.gridPos.x > floor(width / blockWidth) - 2 ||
-    this.gridPos.y > floor(height / blockWidth) - 3)
+    this.gridPos.y > floor(height / blockWidth) - 3) {
+    if (spawnRate > 500)
+      spawnRate -= 50;
     return true;
-  else {
+  } else {
     return false;
   }
 }

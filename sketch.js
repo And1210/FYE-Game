@@ -29,7 +29,8 @@ var mapData = [];
 var mapBlocks = [];
 var surfaceBlocks = [];
 var blockImg;
-var blockWidth = 25;
+var blockWidth = 30;
+var spawnRate = 2000;
 var a = 0,
   d = 0,
   w = 0,
@@ -41,7 +42,7 @@ var a = 0,
   right = 0;
 var player;
 var enemies = [];
-var maxEnemies = 10;
+var maxEnemies = 15;
 var spawnTimer = 0;
 var bullets = [];
 var frameCount = 0;
@@ -84,11 +85,6 @@ function preload() {
 }
 
 function setup() {
-  var write = createWriter("highscore.json");
-  write.print(2);
-  write.close();
-  write.flush();
-
   createCanvas(blockWidth * 36, blockWidth * 30);
 
   //textFont(menuFont);
@@ -298,7 +294,7 @@ function renderMap() {
 }
 
 function addEnemies() {
-  if (enemies.length < maxEnemies && millis() - spawnTimer >= 2000) {
+  if (enemies.length < maxEnemies && millis() - spawnTimer >= spawnRate) {
     enemies.push(new Enemy((floor(width / blockWidth) / 2 + floor(random(2)) -
       1) * blockWidth, blockWidth));
     spawnTimer = millis();
