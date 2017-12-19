@@ -1,6 +1,6 @@
 name: Olivia
 position: Treasurer
-damage: 3
+damage: 5
 fireRate: 20
 width: 50
 height: 50

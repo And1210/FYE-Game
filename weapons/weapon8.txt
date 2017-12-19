@@ -1,6 +1,6 @@
 name: Alex and Graeme
 position: Sci Formal Rep
-damage: 4
+damage: 5
 fireRate: 15
 width: 74
 height: 50

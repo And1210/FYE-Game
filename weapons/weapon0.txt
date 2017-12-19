@@ -1,6 +1,6 @@
 name: Nathan
 position: President
-damage: 5
+damage: 7
 fireRate: 10
 width: 34
 height: 50

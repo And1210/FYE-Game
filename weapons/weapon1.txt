@@ -1,6 +1,6 @@
 name: Andrew V.
 position: Vice President
-damage: 1
+damage: 3
 fireRate: 3
 width: 37
 height: 50
